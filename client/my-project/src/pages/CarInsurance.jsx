@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../api/axios";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import bg from "../assets/insurance/bg.svg";
 
 const CarInsurance = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // entryId passed from CarEntry page
   const entryId = location.state?.entryId;
 
   const [loading, setLoading] = useState(false);
@@ -21,31 +21,18 @@ const CarInsurance = () => {
     variant: "",
     previousPolicy: "",
     existingUser: "",
-    policyExpiry: "",
-    ownershipChange: "",
+    policyExpiryDate: "",
+    vehicleOwnerType: "",
+    cpaCover: "",
     claimLastYear: "",
     ncb: "",
     fullName: "",
     mobile: "",
   });
-  const [touched, setTouched] = useState({});
 
-  const requiredFields = [
-    "rto",
-    "registrationDate",
-    "policyExpiry",
-    "ownershipChange",
-    "claimLastYear",
-    "fullName",
-    "mobile",
-  ];
-
-  /* ---------------------------------
-     FETCH VEHICLE NUMBER
-  ----------------------------------*/
+  /* Fetch vehicle number */
   useEffect(() => {
     if (!entryId) {
-      alert("Invalid entry. Please start again.");
       navigate("/");
       return;
     }
@@ -59,54 +46,31 @@ const CarInsurance = () => {
         }));
       } catch (err) {
         console.error(err);
-        alert("Unable to fetch vehicle details");
       }
     };
 
     fetchVehicle();
   }, [entryId, navigate]);
 
-  /* ---------------------------------
-     HANDLE INPUT CHANGE
-  ----------------------------------*/
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleBlur = (e) => {
-    setTouched((prev) => ({ ...prev, [e.target.name]: true }));
-  };
-
-  /* ---------------------------------
-     SUBMIT → SAVE → NAVIGATE
-  ----------------------------------*/
   const handleSubmit = async () => {
-    // mark all required fields as touched so validation highlights show
-    const newTouched = {};
-    requiredFields.forEach((f) => (newTouched[f] = true));
-    setTouched(newTouched);
-
     try {
       setLoading(true);
-
       const res = await axios.post("/car-insurance/renew", {
         ...form,
         entryId,
       });
 
-      console.log("QUOTE RESPONSE 👉", res.data);
-
-      // ✅ Navigate only when quoteId exists
-      if (res.status === 200 && res.data.quoteId) {
+      if (res.data.quoteId) {
         navigate("/car-insurance/plans", {
           state: { quoteId: res.data.quoteId },
         });
-      } else {
-        alert("Quote ID not received");
       }
-    } catch (err) {
-      console.error(err);
-      alert("Please fill all required fields correctly");
+    } catch {
+      alert("Please fill the fields");
     } finally {
       setLoading(false);
     }
@@ -116,138 +80,163 @@ const CarInsurance = () => {
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-linear-to-b from-[#9cacbb] to-[#c7e0fa] py-10 px-4">
-        <div className="max-w-5xl mx-auto bg-white rounded-lg shadow p-6">
-
-          {/* TITLE */}
-          <h2 className="text-lg font-semibold text-center mb-6">
-            Renew Car Insurance
+      {/* Background */}
+      <div
+        className="flex justify-center px-4 py-12"
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "top",
+        }}
+      >
+        {/* Card */}
+        <div className="w-full max-w-5xl bg-white border-2 border-blue-400 rounded-lg shadow-lg px-8 py-6">
+          <h2 className="text-xl font-bold text-center text-gray-800 mb-5">
+            Renew Car Details
           </h2>
 
-          {/* INSURANCE TYPE */}
-          <div className="flex gap-2 mb-6 justify-center">
-            {["Standalone OD", "Comprehensive", "Third Party"].map((item) => (
+          {/* Policy Type */}
+          <div className="flex justify-center gap-2 mb-6">
+            {["Standalone OD", "Comprehensive", "Third-Party"].map((item, i) => (
               <button
                 key={item}
-                className="border px-4 py-2 rounded text-sm hover:bg-blue-50"
+                className={`px-4 py-1.5 text-sm rounded border ${
+                  i === 1
+                    ? "bg-[#0C77B9] text-white"
+                    : "border-[#0C77B9] text-[#0C77B9]"
+                }`}
               >
                 {item}
               </button>
             ))}
           </div>
 
-          {/* FORM */}
-          <div className="font-bold grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input label="Vehicle Number" name="vehicleNumber" value={form.vehicleNumber} disabled />
-            <Input label="RTO" name="rto" onChange={handleChange} onBlur={handleBlur} required error={requiredFields.includes("rto") && touched.rto && !form.rto} />
-            <Input label="Registration Date" type="date" name="registrationDate" onChange={handleChange} onBlur={handleBlur} required error={requiredFields.includes("registrationDate") && touched.registrationDate && !form.registrationDate} />
+          {/* Form */}
+          <div className="grid md:grid-cols-3 gap-4 text-grey-100 text-sm">
+            <Input label="Vehicle Number" value={form.vehicleNumber} disabled />
+            <Input label="RTO" name="rto" placeholder="KA60 (BENGALURU)" onChange={handleChange} />
+            <Input type="date" label="Registration Date" name="registrationDate" onChange={handleChange} />
 
-            <Select label="Make" name="make" onChange={handleChange} onBlur={handleBlur} />
-            <Select label="Model" name="model" onChange={handleChange} onBlur={handleBlur} />
-            <Select label="Variant" name="variant" onChange={handleChange} onBlur={handleBlur} />
+            <Select label="Make" name="make" placeholder="Maruti" onChange={handleChange} />
+            <Select label="Model" name="model" placeholder="Select Variant" onChange={handleChange} />
+            <Select label="Variant" name="variant" placeholder="Select Variant" onChange={handleChange} />
 
-            <Select label="Previous Policy" name="previousPolicy" onChange={handleChange} onBlur={handleBlur} />
-            <Select label="Existing User" name="existingUser" onChange={handleChange} onBlur={handleBlur} />
-            <Input label="Policy Expiry Date" type="date" name="policyExpiry" onChange={handleChange} onBlur={handleBlur} required error={requiredFields.includes("policyExpiry") && touched.policyExpiry && !form.policyExpiry} />
-          </div>
+            <Select label="Previous Policy" name="previousPolicy" onChange={handleChange} />
+            <Select label="Existing User" name="existingUser" onChange={handleChange} />
+            <Input type="date" label="Policy Expiry Date" name="policyExpiryDate" onChange={handleChange} />
 
-          {/* RADIO GROUPS */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <RadioGroup
-              label="Ownership changed in last 12 months?"
-              name="ownershipChange"
+            <ToggleGroup
+              label="Vehicle Owner Type"
+              name="vehicleOwnerType"
+              options={["Individual", "Organization"]}
               onChange={handleChange}
             />
-            <RadioGroup
-              label="Any claim in last policy?"
+
+            <ToggleGroup
+              label="Separate CPA Cover?"
+              name="cpaCover"
+              options={["Yes", "No"]}
+              onChange={handleChange}
+            />
+
+            <ToggleGroup
+              label="Claim in Expiring Policy?"
               name="claimLastYear"
+              options={["Yes", "No"]}
               onChange={handleChange}
             />
-          </div>
 
-          <div className="mt-4 max-w-xs">
             <Select label="NCB Earned" name="ncb" onChange={handleChange} />
           </div>
 
-          {/* PERSONAL DETAILS */}
-          <h3 className="text-md font-semibold text-center mt-8 mb-4">
-            Personal Details
+          {/* Personal Details */}
+          <h3 className="text-md font-semibold text-center mt-8 mb-3">
+            Renew Car Details
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Full Name" name="fullName" onChange={handleChange} onBlur={handleBlur} required error={requiredFields.includes("fullName") && touched.fullName && !form.fullName} />
-            <Input label="Mobile Number" name="mobile" onChange={handleChange} onBlur={handleBlur} required error={requiredFields.includes("mobile") && touched.mobile && !form.mobile} />
+          <div className="grid md:grid-cols-3 gap-4 text-sm">
+            <Input label="Full Name" name="fullName" onChange={handleChange} />
+            <Input label="Mobile Number" name="mobile" onChange={handleChange} />
           </div>
 
-          {/* TERMS */}
-          <div className="flex items-center gap-2 mt-4 text-sm">
+          {/* Terms */}
+          <div className="flex justify-center items-center gap-2 mt-6 text-xs">
             <input type="checkbox" />
-            <span>I agree to the terms & conditions</span>
+            <span>
+              I agree to the{" "}
+              <span className="text-[#0C77B9] underline">terms & conditions</span>
+            </span>
           </div>
 
-          {/* CTA */}
-          <div className="flex justify-center mt-6">
+          {/* Actions */}
+          <div className="relative mt-8 flex items-center">
+            <button
+              onClick={() => navigate(-1)}
+              className="text-[#0C77B9] text-sm"
+            >
+              ← Back
+            </button>
+
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="bg-[#0b72b9] text-white px-8 py-2 rounded hover:bg-[#095a91] disabled:opacity-60"
+              className="absolute left-1/2 -translate-x-1/2 bg-[#0C77B9] hover:bg-[#0A6295] text-white px-10 py-2.5 rounded-md font-medium"
             >
               {loading ? "Processing..." : "Get Quote"}
             </button>
           </div>
         </div>
       </div>
+
+      <Footer />
     </>
   );
 };
 
-/* ---------- REUSABLE COMPONENTS ---------- */
+/* ---------------- Reusable Components ---------------- */
 
-const Input = ({ label, required, error, ...props }) => (
+const Input = ({ label, ...props }) => (
   <div>
-    <label className="text-xs text-gray-600">
-      {label}
-      {required && <span className="text-red-500 ml-1">*</span>}
-    </label>
+    <label className="block mb-1 text-gray-700">{label}</label>
     <input
       {...props}
-      className={`w-full border rounded px-3 py-2 text-sm disabled:bg-gray-100 ${error ? 'border-red-500' : 'border-blue-300'}`}
+      className="w-full border border-blue-400 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-200"
     />
-    {error && <p className="text-red-500 text-xs mt-1">This field is required</p>}
   </div>
 );
 
-const Select = ({ label, required, error, ...props }) => (
+const Select = ({ label, ...props }) => (
   <div>
-    <label className="text-xs text-gray-600">
-      {label}
-      {required && <span className="text-red-500 ml-1">*</span>}
-    </label>
+    <label className="block mb-1 text-gray-700">{label}</label>
     <select
       {...props}
-      className={`w-full rounded px-3 py-2 text-sm ${error ? 'border-red-500' : 'border border-blue-300'}`}
+      className="w-full border border-blue-400 px-3 py-2 rounded bg-white focus:outline-none"
     >
       <option value="">Select</option>
     </select>
-    {error && <p className="text-red-500 text-xs mt-1">This field is required</p>}
   </div>
 );
 
-const RadioGroup = ({ label, name, onChange, required, error }) => (
+const ToggleGroup = ({ label, name, options, onChange }) => (
   <div>
-    <p className="text-sm mb-2">
-      {label}
-      {required && <span className="text-red-500 ml-1">*</span>}
-    </p>
-    <div className="flex gap-6">
-      {["Yes", "No"].map((v) => (
-        <label key={v} className="flex items-center gap-2 text-sm">
-          <input type="radio" name={name} value={v} onChange={onChange} />
-          {v}
+    <p className="mb-1">{label}</p>
+    <div className="flex border border-blue-400 rounded overflow-hidden w-fit">
+      {options.map((opt) => (
+        <label
+          key={opt}
+          className="px-5 py-1.5 cursor-pointer text-sm text-blue-600 border-r last:border-r-0"
+        >
+          <input
+            type="radio"
+            name={name}
+            value={opt}
+            onChange={onChange}
+            className="hidden"
+          />
+          {opt}
         </label>
       ))}
     </div>
-    {error && <p className="text-red-500 text-xs mt-1">This field is required</p>}
   </div>
 );
 

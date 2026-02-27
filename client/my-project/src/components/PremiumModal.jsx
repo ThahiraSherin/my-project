@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import icici from "../assets/insurance/icici.svg";
 
-const PremiumModal =  ({ isOpen, onClose, plan }) => {
+const PremiumModal = ({ isOpen, onClose, plan }) => {
   if (!isOpen) return null;
 
   const navigate = useNavigate();
@@ -15,16 +16,17 @@ const PremiumModal =  ({ isOpen, onClose, plan }) => {
       ></div>
 
       {/* Modal Container */}
-      <div className="relative bg-white w-full max-w-3xl rounded-md shadow-2xl z-50">
+      <div className="relative bg-white w-full max-w-3xl rounded-lg shadow-2xl z-50">
 
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-4 border-b bg-gray-50 rounded-t-md">
-          <h2 className="text-lg font-semibold text-gray-800">
+        <div className="relative px-6 py-4 border-b bg-gray-50 rounded-t-lg flex items-center justify-center">
+          <h2 className="text-lg font-semibold text-gray-800 text-center">
             Premium Breakup
           </h2>
+
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-lg"
+            className="absolute right-6 text-gray-500 hover:text-gray-700 text-xl"
           >
             ×
           </button>
@@ -33,31 +35,32 @@ const PremiumModal =  ({ isOpen, onClose, plan }) => {
         {/* Body */}
         <div className="px-8 py-6 text-sm text-gray-700">
 
-          {/* Insurer + IDV + NCP */}
-          <div className="flex justify-between items-center mb-6">
+          {/* INSURER + IDV + NCP */}
+          <div className="flex flex-wrap items-center justify-between gap-6 mb-6">
+
+            {/* Left: Insurer */}
             <div className="flex items-center gap-4">
               <img
-                src={plan.logo}
+                src={icici}
                 alt={plan.insurer}
-                className="h-10 object-contain"
+                className="h-15 w-auto object-contain"
               />
-              <div>
-                <p className="font-medium">{plan.insurer}</p>
-                <p className="text-xs text-gray-500">
-                  company limited
-                </p>
-              </div>
+              <p className="font-medium text-gray-800">
+                {plan.insurer}
+              </p>
             </div>
-
-            <div className="flex gap-10 text-right">
-              <div>
+             {/* Divider */}
+  <div className="hidden md:block h-8 w-px bg-gray-200"></div>
+            {/* Right: IDV & NCP */}
+            <div className="flex gap-10">
+              <div className="text-center">
                 <p className="text-xs text-gray-500">IDV</p>
                 <p className="font-semibold text-blue-600">
                   {plan.idv}
                 </p>
               </div>
 
-              <div>
+              <div className="text-center">
                 <p className="text-xs text-gray-500">NCP</p>
                 <p className="font-semibold text-blue-600">
                   45%
@@ -66,14 +69,15 @@ const PremiumModal =  ({ isOpen, onClose, plan }) => {
             </div>
           </div>
 
-          {/* Two Column Premium Section */}
-          <div className="grid grid-cols-2 gap-10">
+          {/* TWO COLUMN PREMIUM DETAILS */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
             {/* LEFT COLUMN */}
             <div>
               <p className="text-blue-600 font-semibold mb-2">
                 OWN DAMAGE PREMIUM (A)
               </p>
+              
 
               <div className="flex justify-between mb-1">
                 <span>Basic Own Damage Premium</span>
@@ -103,7 +107,7 @@ const PremiumModal =  ({ isOpen, onClose, plan }) => {
                 <span></span>
               </div>
             </div>
-
+            
             {/* RIGHT COLUMN */}
             <div>
               <p className="text-blue-600 font-semibold mb-2">
@@ -131,7 +135,7 @@ const PremiumModal =  ({ isOpen, onClose, plan }) => {
             </div>
           </div>
 
-          {/* Bottom Calculation Section */}
+          {/* TOTAL SECTION */}
           <div className="border-t mt-6 pt-4">
 
             <div className="flex justify-between mb-2">
@@ -157,10 +161,10 @@ const PremiumModal =  ({ isOpen, onClose, plan }) => {
           {/* BUY BUTTON */}
           <div className="text-center mt-6">
             <button
-            onClick={() => navigate("/kyc")}
-            className="bg-blue-600 text-white px-8 py-2 rounded-md hover:bg-blue-700 transition"
+              onClick={() => navigate("/kyc")}
+              className="bg-blue-600 text-white px-10 py-2 rounded-md hover:bg-blue-700 transition shadow-md"
             >
-            BUY
+              BUY
             </button>
           </div>
 

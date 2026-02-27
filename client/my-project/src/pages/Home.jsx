@@ -4,6 +4,8 @@ import WhyUs from "../components/WhyUs";
 import ProductInfo from "../components/ProductInfo";
 import Testimonials from "../components/Testimonials";
 import Footer from "../components/Footer";
+import Millions from "../components/Millions";
+import Feedback from "../components/Feedback";
 
 
 const Home = () => {
@@ -13,7 +15,9 @@ const Home = () => {
       <Hero />
       <WhyUs />
       <ProductInfo />
+      <Millions />
       <Testimonials />
+      <Feedback/>
       <Footer />
     </>
   );

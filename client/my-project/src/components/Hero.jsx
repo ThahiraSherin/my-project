@@ -1,82 +1,104 @@
 import { useNavigate } from "react-router-dom";
-import {
-  FaCar,
-  FaMotorcycle,
-  FaHeartbeat,
-  FaPlane,
-  FaBriefcase,
-  FaUserShield,
-  FaGavel,
-} from "react-icons/fa";
+
+/* --------- IMPORT SVGs --------- */
+import termlife from "../assets/hero/termlife.svg";
+import investment from "../assets/hero/investment.svg";
+
+import car from "../assets/hero/car.svg";
+import bike from "../assets/hero/bike.svg";
+import legalaid from "../assets/hero/legalaid.svg";
+
+import mediclaim from "../assets/hero/mediclaim.svg";
+import supertopup from "../assets/hero/supertopup.svg";
+
+import travel from "../assets/hero/travel.svg";
+import sme from "../assets/hero/sme.svg";
 
 const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative overflow-hidden bg-white px-6 py-16">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+    <section className="relative bg-white overflow-hidden px-6 py-16">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
 
-        {/* LEFT CONTENT */}
+        {/* LEFT */}
         <div className="flex-1 z-10">
-          <h1 className="text-4xl font-bold text-[#0b72b9] mb-3 uppercase">
-            Secure Your Future with Smart Insurance
+          <h1 className="text-3xl font-bold text-[#0C77B9] uppercase mb-3">
+            Secure Your Future With Smart Insurance
           </h1>
-          <p className="text-gray-400 mb-8 max-w-xl">
+
+          <p className="text-gray-500 mb-10 max-w-xl">
             Compare, choose, and buy the best insurance plans in minutes.
             Trusted by thousands of customers across India.
           </p>
 
-          {/* INSURANCE CARDS */}
-          <div className="grid grid-cols-2 sm:grid-cols-3  gap-4 max-w-xl">
+          {/* CARDS GRID */}
+          <div className="grid grid-cols-6 gap-5 max-w-xl">
 
-            {/* LIFE */}
-            <Card title="Life" items={[
-              { label: "Term Life", icon: <FaUserShield /> },
-              { label: "Investment", icon: <FaBriefcase /> },
-            ]} />
-
-            {/* MOTOR */}
-            <Card title="Motor" items={[
-              {
-                label: "Car",
-                icon: <FaCar />,
-                onClick: () => navigate("/car-insurance"),
-              },
-              { label: "Bike", icon: <FaMotorcycle /> },
-              { label: "Legal Aid", icon: <FaGavel /> },
-            ]} />
-
-            {/* HEALTH */}
-            <Card title="Health" items={[
-              { label: "Mediclaim", icon: <FaHeartbeat /> },
-              { label: "Super Top Up", icon: <FaHeartbeat /> },
-            ]} />
-
-            {/* TRAVEL */}
-            <Card title="Travel" items={[
-              { label: "Travel", icon: <FaPlane /> },
-            ]} />
-
-            {/* COMMERCIAL */}
-            <Card title="Commercial" items={[
-              { label: "SME & Others", icon: <FaBriefcase /> },
-            ]} />
-          </div>
+        {/* ROW 1 */}
+        <div className="col-span-3">
+          <InsuranceCard
+            title="Life"
+            items={[
+              { label: "Term Life", img: termlife },
+              { label: "Investment", img: investment },
+            ]}
+          />
         </div>
 
-        {/* RIGHT CURVE SVG */}
-        <div className="absolute right-0 top-0 h-full w-[40%] hidden lg:block">
-          <svg
-            viewBox="0 0 440 709"
-            className="h-full w-full"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <div className="col-span-3">
+          <InsuranceCard
+            title="Motor"
+            items={[
+              {
+                label: "Car",
+                img: car,
+                onClick: () => navigate("/car-insurance"),
+              },
+              { label: "Bike", img: bike },
+              { label: "Legal Aid", img: legalaid },
+            ]}
+          />
+        </div>
+
+        {/* ROW 2 */}
+        <div className="col-span-3">
+          <InsuranceCard
+            title="Health"
+            items={[
+              { label: "Mediclaim", img: mediclaim },
+              { label: "Super Top Up", img: supertopup },
+            ]}
+          />
+        </div>
+
+        <div className="col-span-1">
+          <InsuranceCard
+            title="Travel"
+            items={[{ label: "Travel", img: travel }]}
+          />
+        </div>
+
+        <div className="col-span-2">
+          <InsuranceCard
+            title="Commercial"
+            items={[{ label: "SME and others", img: sme }]}
+          />
+        </div>
+
+      </div>
+        </div>
+
+        {/* RIGHT CURVE */}
+        <div className="absolute right-0 top-0 h-full w-[38%] hidden lg:block">
+          <svg viewBox="0 0 440 709" className="h-full w-full">
             <path
-              d="M226.01 364.326C161.303 217.025 1.76207 164.317 0.0156356 8.06031C-0.0195445 4.91269 0.0156356 0 0.0156356 0H654V673.842C654 673.842 405.101 752.948 318.008 673.842C247.314 609.63 277.479 481.492 226.01 364.326Z"
+              d="M226.01 364.326C161.303 217.025 1.76207 164.317 0.0156356 8.06031V0H654V673.842C654 673.842 405.101 752.948 318.008 673.842C247.314 609.63 277.479 481.492 226.01 364.326Z"
               fill="#0C77B9"
             />
           </svg>
         </div>
+
       </div>
     </section>
   );
@@ -84,31 +106,38 @@ const Hero = () => {
 
 export default Hero;
 
-/* ---------------- CARD COMPONENT ---------------- */
+/* ------------ CARD COMPONENT ------------ */
 
-const Card = ({ title, items }) => (
-  <div className="border-2 border-blue-300 rounded-2xl bg-white overflow-hidden">
+const InsuranceCard = ({ title, items }) => {
+  const gridCols =
+    items.length === 3 ? "grid-cols-3" :
+    items.length === 2 ? "grid-cols-2" :
+    "grid-cols-1";
 
-    {/* TITLE */}
-    <div className="text-center font-semibold text-sm py-3 border-b border-blue-200">
-      {title}
+  return (
+    <div className="border-3 border-[#9fd0f5] rounded-2xl bg-white overflow-hidden h-full">
+
+      {/* TITLE */}
+      <div className="text-center text-lg font-bold text-[#28325A] py-1">
+        {title}
+      </div>
+
+      {/* ITEMS */}
+      <div className={`grid ${gridCols} divide-x divide-y divide-[#9fd0f5]`}>
+        {items.map((item, i) => (
+          <button
+            key={i}
+            onClick={item.onClick}
+            className="flex flex-col items-center justify-center py-2 gap-2
+                       text-md text-black hover:bg-blue-50
+                       transition"
+          >
+            <img src={item.img} alt={item.label} className="h-8 w-40" />
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </div>
+
     </div>
-
-    {/* ITEMS GRID */}
-    <div className="grid grid-cols-2 divide-x divide-y divide-blue-200">
-      {items.map((item, i) => (
-        <button
-          key={i}
-          onClick={item.onClick}
-          className="flex flex-col items-center justify-center gap-2 py-4
-                     text-xs text-gray-700 hover:bg-blue-50
-                     hover:text-[#0b72b9] transition"
-        >
-          <span className="text-xl">{item.icon}</span>
-          <span>{item.label}</span>
-        </button>
-      ))}
-    </div>
-
-  </div>
-);
+  );
+};

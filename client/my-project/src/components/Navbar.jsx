@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logos/logo.svg";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow relative z-50">
+    <nav className="bg-white relative z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* LOGO */}
@@ -19,8 +20,11 @@ const Navbar = () => {
           className="text-xl font-bold cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <span className="text-blue-500">Insure</span>
-          <span className="text-green-600">Correct</span>
+          <img
+            src={logo}
+            alt="InsureCorrect Logo"
+            className="h-10 w-auto"
+          />
         </h1>
 
         {/* MENU */}
@@ -32,14 +36,13 @@ const Navbar = () => {
             onMouseEnter={() => setOpenMenu("insurance")}
             onMouseLeave={() => setOpenMenu(null)}
           >
-            <button className="flex items-center gap-1 py-2">
-              Insurance
+            <button className="flex items-center font-bold gap-1 py-2">
+              Insurance <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
               <span
                 className={`text-xs transition-transform ${
                   openMenu === "insurance" ? "rotate-180" : ""
                 }`}
               >
-                ▼
               </span>
             </button>
 
@@ -72,14 +75,14 @@ const Navbar = () => {
             onMouseEnter={() => setOpenMenu("renew")}
             onMouseLeave={() => setOpenMenu(null)}
           >
-            <button className="flex items-center gap-1 py-2">
-              Renew
+            <button className="flex items-center font-bold gap-1 py-2">
+              Renew <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
               <span
                 className={`text-xs transition-transform ${
                   openMenu === "renew" ? "rotate-180" : ""
                 }`}
               >
-                ▼
+                
               </span>
             </button>
 
@@ -106,14 +109,14 @@ const Navbar = () => {
             onMouseEnter={() => setOpenMenu("solutions")}
             onMouseLeave={() => setOpenMenu(null)}
           >
-            <button className="flex items-center gap-1 py-2">
-              Solutions
+            <button className="flex items-center font-bold gap-1 py-2">
+              Solutions<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
               <span
                 className={`text-xs transition-transform ${
                   openMenu === "solutions" ? "rotate-180" : ""
                 }`}
               >
-                ▼
+                
               </span>
             </button>
 
@@ -132,7 +135,7 @@ const Navbar = () => {
             )}
           </li>
 
-          <li className="cursor-pointer hover:text-blue-500">Claims</li>
+          <li className=" font-bold">Claims</li>
         </ul>
 
         <svg width="270" height="58" viewBox="0 0 270 58" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -144,7 +147,7 @@ const Navbar = () => {
         {/* LOGIN */}
         <button
           onClick={() => navigate("/login")}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+          className="bg-[#0C77B9] text-white px-8 py-4 rounded-lg font-medium"
         >
           Login
         </button>
